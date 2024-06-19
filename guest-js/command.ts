@@ -34,11 +34,11 @@ import { EventEmitter } from "./event";
  */
 export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
   /** @ignore Program to execute. */
-  private readonly program: string;
+  readonly program: string;
   /** @ignore Program arguments */
-  private readonly args: string[];
+  readonly args: string[];
   /** @ignore Spawn options. */
-  private readonly options: InternalSpawnOptions;
+  readonly options: InternalSpawnOptions;
   /** Event emitter for the `stdout`. Emits the `data` event. */
   readonly stdout = new EventEmitter<OutputEvents<O>>();
   /** Event emitter for the `stderr`. Emits the `data` event. */

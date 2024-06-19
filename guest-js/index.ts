@@ -2,14 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 export { Child } from "./child";
 export { Command } from "./command";
 export { EventEmitter } from "./event";
-export type {
-  IOPayload,
-  CommandEvents,
-  TerminatedPayload,
-  OutputEvents,
-  ChildProcess,
-  SpawnOptions,
-} from "./types";
+export type * from "./types";
 
 /**
  * Opens a path or URL with the system's default app,
