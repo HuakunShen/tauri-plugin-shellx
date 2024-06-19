@@ -221,12 +221,14 @@ pub async fn execute<R: Runtime>(
     program: String,
     args: ExecuteArgs,
     options: CommandOptions,
+    shell: State<'_, Shell<R>>,
     command_scope: CommandScope<crate::scope::ScopeAllowedCommand>,
     global_scope: GlobalScope<crate::scope::ScopeAllowedCommand>,
 ) -> crate::Result<ChildProcessReturn> {
-    // let (command, encoding) =
-    //     prepare_cmd(window, program, args, options, command_scope, global_scope)?;
-    let (command, encoding) = unlocked_prepare_cmd(program, args, options)?;
+    let (command, encoding) = match shell.unlocked {
+        false => prepare_cmd(window, program, args, options, command_scope, global_scope)?,
+        true => unlocked_prepare_cmd(program, args, options)?,
+    };
     let mut command: std::process::Command = command.into();
     let output = command.output()?;
     let (stdout, stderr) = match encoding {
@@ -267,9 +269,10 @@ pub fn spawn<R: Runtime>(
     command_scope: CommandScope<crate::scope::ScopeAllowedCommand>,
     global_scope: GlobalScope<crate::scope::ScopeAllowedCommand>,
 ) -> crate::Result<ChildId> {
-    // let (command, encoding) =
-    //     prepare_cmd(window, program, args, options, command_scope, global_scope)?;
-    let (command, encoding) = unlocked_prepare_cmd(program, args, options)?;
+    let (command, encoding) = match shell.unlocked {
+        false => prepare_cmd(window, program, args, options, command_scope, global_scope)?,
+        true => unlocked_prepare_cmd(program, args, options)?,
+    };
     let (mut rx, child) = command.spawn()?;
 
     let pid = child.pid();

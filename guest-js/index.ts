@@ -1,8 +1,9 @@
-import { invoke } from "@tauri-apps/api/core";
-export { Child } from "./child";
-export { Command } from "./command";
-export { EventEmitter } from "./event";
-export type * from "./types";
+import { invoke } from '@tauri-apps/api/core'
+export { Child } from './child'
+export { Command } from './command'
+export * from './script'
+export { EventEmitter } from './event'
+export type * from './types'
 
 /**
  * Opens a path or URL with the system's default app,
@@ -31,12 +32,16 @@ export type * from "./types";
  * @since 2.0.0
  */
 export function open(path: string, openWith?: string) {
-  return invoke<void>("plugin:shellx|open", {
+  return invoke<void>('plugin:shellx|open', {
     path,
-    with: openWith,
-  });
+    with: openWith
+  })
 }
 
+/**
+ * Run this function to fix the PATH environment variable.
+ * e.g. if ffmpeg is in your PATH variable but it doesn't work, try running this function to fix it.
+ */
 export function fixPathEnv() {
-  return invoke<void>("plugin:shellx|fix_path_env");
+  return invoke<void>('plugin:shellx|fix_path_env')
 }

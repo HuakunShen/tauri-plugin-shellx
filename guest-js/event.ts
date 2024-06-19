@@ -6,7 +6,7 @@ export class EventEmitter<E extends Record<string, any>> {
   /** @ignore */
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   private eventListeners: Record<keyof E, Array<(arg: any) => void>> =
-    Object.create(null);
+    Object.create(null)
 
   /**
    * Alias for `emitter.on(eventName, listener)`.
@@ -17,7 +17,7 @@ export class EventEmitter<E extends Record<string, any>> {
     eventName: N,
     listener: (arg: E[typeof eventName]) => void
   ): this {
-    return this.on(eventName, listener);
+    return this.on(eventName, listener)
   }
 
   /**
@@ -29,7 +29,7 @@ export class EventEmitter<E extends Record<string, any>> {
     eventName: N,
     listener: (arg: E[typeof eventName]) => void
   ): this {
-    return this.off(eventName, listener);
+    return this.off(eventName, listener)
   }
 
   /**
@@ -48,12 +48,12 @@ export class EventEmitter<E extends Record<string, any>> {
   ): this {
     if (eventName in this.eventListeners) {
       // eslint-disable-next-line security/detect-object-injection
-      this.eventListeners[eventName].push(listener);
+      this.eventListeners[eventName].push(listener)
     } else {
       // eslint-disable-next-line security/detect-object-injection
-      this.eventListeners[eventName] = [listener];
+      this.eventListeners[eventName] = [listener]
     }
-    return this;
+    return this
   }
 
   /**
@@ -69,10 +69,10 @@ export class EventEmitter<E extends Record<string, any>> {
     listener: (arg: E[typeof eventName]) => void
   ): this {
     const wrapper = (arg: E[typeof eventName]): void => {
-      this.removeListener(eventName, wrapper);
-      listener(arg);
-    };
-    return this.addListener(eventName, wrapper);
+      this.removeListener(eventName, wrapper)
+      listener(arg)
+    }
+    return this.addListener(eventName, wrapper)
   }
 
   /**
@@ -89,9 +89,9 @@ export class EventEmitter<E extends Record<string, any>> {
       // eslint-disable-next-line security/detect-object-injection
       this.eventListeners[eventName] = this.eventListeners[eventName].filter(
         (l) => l !== listener
-      );
+      )
     }
-    return this;
+    return this
   }
 
   /**
@@ -104,12 +104,12 @@ export class EventEmitter<E extends Record<string, any>> {
   removeAllListeners<N extends keyof E>(event?: N): this {
     if (event) {
       // eslint-disable-next-line security/detect-object-injection
-      delete this.eventListeners[event];
+      delete this.eventListeners[event]
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      this.eventListeners = Object.create(null);
+      this.eventListeners = Object.create(null)
     }
-    return this;
+    return this
   }
 
   /**
@@ -124,11 +124,11 @@ export class EventEmitter<E extends Record<string, any>> {
   emit<N extends keyof E>(eventName: N, arg: E[typeof eventName]): boolean {
     if (eventName in this.eventListeners) {
       // eslint-disable-next-line security/detect-object-injection
-      const listeners = this.eventListeners[eventName];
-      for (const listener of listeners) listener(arg);
-      return true;
+      const listeners = this.eventListeners[eventName]
+      for (const listener of listeners) listener(arg)
+      return true
     }
-    return false;
+    return false
   }
 
   /**
@@ -139,8 +139,8 @@ export class EventEmitter<E extends Record<string, any>> {
   listenerCount<N extends keyof E>(eventName: N): number {
     if (eventName in this.eventListeners)
       // eslint-disable-next-line security/detect-object-injection
-      return this.eventListeners[eventName].length;
-    return 0;
+      return this.eventListeners[eventName].length
+    return 0
   }
 
   /**
@@ -159,12 +159,12 @@ export class EventEmitter<E extends Record<string, any>> {
   ): this {
     if (eventName in this.eventListeners) {
       // eslint-disable-next-line security/detect-object-injection
-      this.eventListeners[eventName].unshift(listener);
+      this.eventListeners[eventName].unshift(listener)
     } else {
       // eslint-disable-next-line security/detect-object-injection
-      this.eventListeners[eventName] = [listener];
+      this.eventListeners[eventName] = [listener]
     }
-    return this;
+    return this
   }
 
   /**
@@ -181,10 +181,10 @@ export class EventEmitter<E extends Record<string, any>> {
   ): this {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const wrapper = (arg: any): void => {
-      this.removeListener(eventName, wrapper);
+      this.removeListener(eventName, wrapper)
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      listener(arg);
-    };
-    return this.prependListener(eventName, wrapper);
+      listener(arg)
+    }
+    return this.prependListener(eventName, wrapper)
   }
 }

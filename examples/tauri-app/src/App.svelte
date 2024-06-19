@@ -3,10 +3,12 @@
   import { Command } from "tauri-plugin-shellx-api";
 
   onMount(async () => {
-    const cmd = Command.create("echo", ["Hello, Tauri!"]);
-    const result = await cmd.execute();
-    console.log(result);
-    console.log(result.stdout);
+    // console.log(await runBashScript("ffmpeg -i /Users/hacker/Downloads/video.mp4 /Users/hacker/Downloads/video.mov"))
+    // const cmd = Command.create("bash", ["-c", "echo hi"]);
+    // // const cmd = Command.create("echo", ["Hello, Tauri!"]);
+    // const result = await cmd.execute();
+    // console.log(result);
+    // console.log(result.stdout);
   });
 </script>
 

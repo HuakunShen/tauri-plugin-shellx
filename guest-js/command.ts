@@ -1,5 +1,5 @@
-import { Channel, invoke } from "@tauri-apps/api/core";
-import { Child } from "./child";
+import { Channel, invoke } from '@tauri-apps/api/core'
+import { Child } from './child'
 import {
   ChildProcess,
   CommandEvent,
@@ -7,9 +7,9 @@ import {
   InternalSpawnOptions,
   IOPayload,
   OutputEvents,
-  SpawnOptions,
-} from "./types";
-import { EventEmitter } from "./event";
+  SpawnOptions
+} from './types'
+import { EventEmitter } from './event'
 
 /**
  * The entry point for spawning child processes.
@@ -34,15 +34,15 @@ import { EventEmitter } from "./event";
  */
 export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
   /** @ignore Program to execute. */
-  readonly program: string;
+  readonly program: string
   /** @ignore Program arguments */
-  readonly args: string[];
+  readonly args: string[]
   /** @ignore Spawn options. */
-  readonly options: InternalSpawnOptions;
+  readonly options: InternalSpawnOptions
   /** Event emitter for the `stdout`. Emits the `data` event. */
-  readonly stdout = new EventEmitter<OutputEvents<O>>();
+  readonly stdout = new EventEmitter<OutputEvents<O>>()
   /** Event emitter for the `stderr`. Emits the `data` event. */
-  readonly stderr = new EventEmitter<OutputEvents<O>>();
+  readonly stderr = new EventEmitter<OutputEvents<O>>()
 
   /**
    * @ignore
@@ -58,23 +58,23 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
     args: string | string[] = [],
     options?: SpawnOptions
   ) {
-    super();
-    this.program = program;
-    this.args = typeof args === "string" ? [args] : args;
-    this.options = options ?? {};
+    super()
+    this.program = program
+    this.args = typeof args === 'string' ? [args] : args
+    this.options = options ?? {}
   }
 
-  static create(program: string, args?: string | string[]): Command<string>;
+  static create(program: string, args?: string | string[]): Command<string>
   static create(
     program: string,
     args?: string | string[],
-    options?: SpawnOptions & { encoding: "raw" }
-  ): Command<Uint8Array>;
+    options?: SpawnOptions & { encoding: 'raw' }
+  ): Command<Uint8Array>
   static create(
     program: string,
     args?: string | string[],
     options?: SpawnOptions
-  ): Command<string>;
+  ): Command<string>
 
   /**
    * Creates a command to execute the given program.
@@ -93,20 +93,20 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
     args: string | string[] = [],
     options?: SpawnOptions
   ): Command<O> {
-    return new Command(program, args, options);
+    return new Command(program, args, options)
   }
 
-  static sidecar(program: string, args?: string | string[]): Command<string>;
+  static sidecar(program: string, args?: string | string[]): Command<string>
   static sidecar(
     program: string,
     args?: string | string[],
-    options?: SpawnOptions & { encoding: "raw" }
-  ): Command<Uint8Array>;
+    options?: SpawnOptions & { encoding: 'raw' }
+  ): Command<Uint8Array>
   static sidecar(
     program: string,
     args?: string | string[],
     options?: SpawnOptions
-  ): Command<string>;
+  ): Command<string>
 
   /**
    * Creates a command to execute the given sidecar program.
@@ -125,9 +125,9 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
     args: string | string[] = [],
     options?: SpawnOptions
   ): Command<O> {
-    const instance = new Command<O>(program, args, options);
-    instance.options.sidecar = true;
-    return instance;
+    const instance = new Command<O>(program, args, options)
+    instance.options.sidecar = true
+    return instance
   }
 
   /**
@@ -138,38 +138,38 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
    * @since 2.0.0
    */
   async spawn(): Promise<Child> {
-    const program = this.program;
-    const args = this.args;
-    const options = this.options;
+    const program = this.program
+    const args = this.args
+    const options = this.options
 
-    if (typeof args === "object") {
-      Object.freeze(args);
+    if (typeof args === 'object') {
+      Object.freeze(args)
     }
 
-    const onEvent = new Channel<CommandEvent<O>>();
+    const onEvent = new Channel<CommandEvent<O>>()
     onEvent.onmessage = (event) => {
       switch (event.event) {
-        case "Error":
-          this.emit("error", event.payload);
-          break;
-        case "Terminated":
-          this.emit("close", event.payload);
-          break;
-        case "Stdout":
-          this.stdout.emit("data", event.payload);
-          break;
-        case "Stderr":
-          this.stderr.emit("data", event.payload);
-          break;
+        case 'Error':
+          this.emit('error', event.payload)
+          break
+        case 'Terminated':
+          this.emit('close', event.payload)
+          break
+        case 'Stdout':
+          this.stdout.emit('data', event.payload)
+          break
+        case 'Stderr':
+          this.stderr.emit('data', event.payload)
+          break
       }
-    };
+    }
 
-    return await invoke<number>("plugin:shellx|spawn", {
+    return await invoke<number>('plugin:shellx|spawn', {
       program,
       args,
       options,
-      onEvent,
-    }).then((pid) => new Child(pid));
+      onEvent
+    }).then((pid) => new Child(pid))
   }
 
   /**
@@ -189,18 +189,18 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
    * @since 2.0.0
    */
   async execute(): Promise<ChildProcess<O>> {
-    const program = this.program;
-    const args = this.args;
-    const options = this.options;
+    const program = this.program
+    const args = this.args
+    const options = this.options
 
-    if (typeof args === "object") {
-      Object.freeze(args);
+    if (typeof args === 'object') {
+      Object.freeze(args)
     }
 
-    return invoke<ChildProcess<O>>("plugin:shellx|execute", {
+    return invoke<ChildProcess<O>>('plugin:shellx|execute', {
       program,
       args,
-      options,
-    });
+      options
+    })
   }
 }

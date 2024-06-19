@@ -5,7 +5,7 @@ use tauri::Manager;
 pub fn run() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![])
-        .plugin(tauri_plugin_shellx::init())
+        .plugin(tauri_plugin_shellx::init(true))
         .setup(|app| {
             #[cfg(debug_assertions)] // only include this code on debug builds
             {

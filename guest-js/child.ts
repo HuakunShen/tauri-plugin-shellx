@@ -1,15 +1,15 @@
-import { invoke } from "@tauri-apps/api/core";
-import { IOPayload } from "./types";
+import { invoke } from '@tauri-apps/api/core'
+import { IOPayload } from './types'
 
 /**
  * @since 2.0.0
  */
 export class Child {
   /** The child process `pid`. */
-  pid: number;
+  pid: number
 
   constructor(pid: number) {
-    this.pid = pid;
+    this.pid = pid
   }
 
   /**
@@ -30,11 +30,11 @@ export class Child {
    * @since 2.0.0
    */
   async write(data: IOPayload): Promise<void> {
-    await invoke("plugin:shellx|stdin_write", {
+    await invoke('plugin:shellx|stdin_write', {
       pid: this.pid,
       // correctly serialize Uint8Arrays
-      buffer: typeof data === "string" ? data : Array.from(data),
-    });
+      buffer: typeof data === 'string' ? data : Array.from(data)
+    })
   }
 
   /**
@@ -45,9 +45,9 @@ export class Child {
    * @since 2.0.0
    */
   async kill(): Promise<void> {
-    await invoke("plugin:shellx|kill", {
-      cmd: "killChild",
-      pid: this.pid,
-    });
+    await invoke('plugin:shellx|kill', {
+      cmd: 'killChild',
+      pid: this.pid
+    })
   }
 }

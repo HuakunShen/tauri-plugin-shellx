@@ -41,6 +41,7 @@ type ChildStore = Arc<Mutex<HashMap<u32, CommandChild>>>;
 pub struct Shell<R: Runtime> {
     #[allow(dead_code)]
     app: AppHandle<R>,
+    unlocked: bool,
     open_scope: scope::OpenScope,
     children: ChildStore,
 }
@@ -77,7 +78,7 @@ impl<R: Runtime, T: Manager<R>> ShellExt<R> for T {
     }
 }
 
-pub fn init<R: Runtime>() -> TauriPlugin<R, Option<config::Config>> {
+pub fn init<R: Runtime>(unlocked: bool) -> TauriPlugin<R, Option<config::Config>> {
     Builder::<R, Option<config::Config>>::new("shellx")
         // .js_init_script(include_str!("init-iife.js").to_string())
         .invoke_handler(tauri::generate_handler![
@@ -88,11 +89,12 @@ pub fn init<R: Runtime>() -> TauriPlugin<R, Option<config::Config>> {
             commands::open,
             commands::fix_path_env
         ])
-        .setup(|app, api| {
+        .setup(move |app, api| {
             let default_config = config::Config::default();
             let config = api.config().as_ref().unwrap_or(&default_config);
             app.manage(Shell {
                 app: app.clone(),
+                unlocked,
                 children: Default::default(),
                 open_scope: open_scope(&config.open),
             });
