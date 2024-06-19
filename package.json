@@ -22,7 +22,7 @@
     "prepublishOnly": "yarn build",
     "pretest": "yarn build",
     "build:docs": "typedoc guest-js/index.ts",
-    "format": "prettier -w ."
+    "format": "prettier -w ./**.ts"
   },
   "dependencies": {
     "@tauri-apps/api": ">=2.0.0-beta.6",
