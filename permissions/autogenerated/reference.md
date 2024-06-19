@@ -2,6 +2,8 @@
 |------|-----|
 |`allow-execute`|Enables the execute command without any pre-configured scope.|
 |`deny-execute`|Denies the execute command without any pre-configured scope.|
+|`allow-fix-path-env`|Enables the fix_path_env command without any pre-configured scope.|
+|`deny-fix-path-env`|Denies the fix_path_env command without any pre-configured scope.|
 |`allow-kill`|Enables the kill command without any pre-configured scope.|
 |`deny-kill`|Denies the kill command without any pre-configured scope.|
 |`allow-open`|Enables the open command without any pre-configured scope.|

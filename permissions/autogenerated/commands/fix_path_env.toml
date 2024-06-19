@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-fix-path-env"
+description = "Enables the fix_path_env command without any pre-configured scope."
+commands.allow = ["fix_path_env"]
+
+[[permission]]
+identifier = "deny-fix-path-env"
+description = "Denies the fix_path_env command without any pre-configured scope."
+commands.deny = ["fix_path_env"]

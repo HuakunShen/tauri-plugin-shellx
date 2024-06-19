@@ -309,6 +309,20 @@
           ]
         },
         {
+          "description": "allow-fix-path-env -> Enables the fix_path_env command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "allow-fix-path-env"
+          ]
+        },
+        {
+          "description": "deny-fix-path-env -> Denies the fix_path_env command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "deny-fix-path-env"
+          ]
+        },
+        {
           "description": "allow-kill -> Enables the kill command without any pre-configured scope.",
           "type": "string",
           "enum": [
