@@ -197,7 +197,7 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
       Object.freeze(args);
     }
 
-    return await invoke<ChildProcess<O>>("plugin:shellx|execute", {
+    return invoke<ChildProcess<O>>("plugin:shellx|execute", {
       program,
       args,
       options,

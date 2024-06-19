@@ -179,62 +179,21 @@ enum Output {
 pub struct ChildProcessReturn {
     code: Option<i32>,
     signal: Option<i32>,
-    #[serde(flatten)]
     stdout: Output,
-    #[serde(flatten)]
     stderr: Output,
 }
 
-#[allow(clippy::too_many_arguments)]
-#[tauri::command]
-pub fn execute<R: Runtime>(
-    window: Window<R>,
+pub fn unlocked_prepare_cmd(
     program: String,
     args: ExecuteArgs,
     options: CommandOptions,
-    command_scope: CommandScope<crate::scope::ScopeAllowedCommand>,
-    global_scope: GlobalScope<crate::scope::ScopeAllowedCommand>,
-) -> crate::Result<ChildProcessReturn> {
-    // let (command, encoding) =
-    //     prepare_cmd(window, program, args, options, command_scope, global_scope)?;
+) -> crate::Result<(crate::process::Command, EncodingWrapper)> {
     let args = match (args) {
         (ExecuteArgs::None) => vec![],
         (ExecuteArgs::List(list)) => list,
         (ExecuteArgs::Single(string)) => vec![string],
-        // (Some(list), ExecuteArgs::List(args)) => list
-        //     .iter()
-        //     .enumerate()
-        //     .map(|(i, arg)| match arg {
-        //         ScopeAllowedArg::Fixed(fixed) => Ok(fixed.to_string()),
-        //         ScopeAllowedArg::Var { validator } => {
-        //             let value = args
-        //                 .get(i)
-        //                 .ok_or_else(|| Error::MissingVar(i, validator.to_string()))?
-        //                 .to_string();
-        //             if validator.is_match(&value) {
-        //                 Ok(value)
-        //             } else {
-        //                 Err(Error::Validation {
-        //                     index: i,
-        //                     validation: validator.to_string(),
-        //                 })
-        //             }
-        //         }
-        //     })
-        //     .collect(),
-        // (Some(list), arg) if arg.is_empty() && list.iter().all(ScopeAllowedArg::is_fixed) => list
-        //     .iter()
-        //     .map(|arg| match arg {
-        //         ScopeAllowedArg::Fixed(fixed) => Ok(fixed.to_string()),
-        //         _ => unreachable!(),
-        //     })
-        //     .collect(),
-        // (Some(list), _) if list.is_empty() => Err(Error::InvalidInput(program.into())),
-        // (Some(_), _) => Err(Error::InvalidInput(program.into())),
     };
-    println!("args: {:?}", args);
     let mut command = Command::new(program).args(args);
-    println!("command: {:?}", command);
     let encoding = match options.encoding {
         Option::None => EncodingWrapper::Text(None),
         Some(encoding) => match encoding.as_str() {
@@ -251,10 +210,24 @@ pub fn execute<R: Runtime>(
             }
         },
     };
+    Ok((command, encoding))
+}
+
+#[allow(clippy::too_many_arguments)]
+#[tauri::command]
+pub fn execute<R: Runtime>(
+    window: Window<R>,
+    program: String,
+    args: ExecuteArgs,
+    options: CommandOptions,
+    command_scope: CommandScope<crate::scope::ScopeAllowedCommand>,
+    global_scope: GlobalScope<crate::scope::ScopeAllowedCommand>,
+) -> crate::Result<ChildProcessReturn> {
+    // let (command, encoding) =
+    //     prepare_cmd(window, program, args, options, command_scope, global_scope)?;
+    let (command, encoding) = unlocked_prepare_cmd(program, args, options)?;
     let mut command: std::process::Command = command.into();
     let output = command.output()?;
-    // println!("output: {:?}", output);
-    // let stdout_str = String::from_utf8(output.stdout.clone())?;
     let (stdout, stderr) = match encoding {
         EncodingWrapper::Text(Some(encoding)) => (
             Output::String(encoding.decode_with_bom_removal(&output.stdout).0.into()),
@@ -266,13 +239,11 @@ pub fn execute<R: Runtime>(
         ),
         EncodingWrapper::Raw => (Output::Raw(output.stdout), Output::Raw(output.stderr)),
     };
-    println!("stdout: {:?}", stdout);
     // convert stdout to string
-    // println!("stdout_str: {:?}", stdout_str);
     #[cfg(unix)]
     use std::os::unix::process::ExitStatusExt;
 
-    let ret = ChildProcessReturn {
+    Ok(ChildProcessReturn {
         code: output.status.code(),
         #[cfg(windows)]
         signal: None,
@@ -280,9 +251,7 @@ pub fn execute<R: Runtime>(
         signal: output.status.signal(),
         stdout,
         stderr,
-    };
-    println!("ret: {:#?}", ret);
-    Ok(ret)
+    })
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -297,9 +266,9 @@ pub fn spawn<R: Runtime>(
     command_scope: CommandScope<crate::scope::ScopeAllowedCommand>,
     global_scope: GlobalScope<crate::scope::ScopeAllowedCommand>,
 ) -> crate::Result<ChildId> {
-    let (command, encoding) =
-        prepare_cmd(window, program, args, options, command_scope, global_scope)?;
-
+    // let (command, encoding) =
+    //     prepare_cmd(window, program, args, options, command_scope, global_scope)?;
+    let (command, encoding) = unlocked_prepare_cmd(program, args, options)?;
     let (mut rx, child) = command.spawn()?;
 
     let pid = child.pid();
@@ -369,4 +338,9 @@ pub fn open<R: Runtime>(
     with: Option<Program>,
 ) -> crate::Result<()> {
     shell.open(path, with)
+}
+#[tauri::command]
+pub fn fix_path_env() -> crate::Result<()> {
+    let _ = fix_path_env::fix();
+    Ok(())
 }

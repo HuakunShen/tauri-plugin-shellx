@@ -43,3 +43,7 @@ export function open(path: string, openWith?: string) {
     with: openWith,
   });
 }
+
+export function fixPathEnv() {
+  return invoke<void>("plugin:shellx|fix_path_env");
+}

@@ -3,11 +3,42 @@
   import { Command } from "tauri-plugin-shellx-api";
 
   onMount(async () => {
-    let result = await Command.create("echo", [
-      "Hello World!",
-    ]).execute();
-    console.log(result);
-    console.log(result.stdout)
+    // let result = await Command.create("bash", ["-c", "echo 'hello'"]).execute();
+    // console.log(result);
+    // console.log(result.stdout);
+    let start = Date.now();
+    const command = Command.create("ffmpeg", [
+      "-i",
+      "/Users/hacker/Downloads/video.mp4",
+      "-c:v",
+      "h264_videotoolbox",
+      // "-b:v",
+      // "5M",
+      // "-c:a",
+      // "aac",
+      // "-b:a",
+      // "128k",
+      "/Users/hacker/Downloads/video.mov",
+    ]);
+    // const command = Command.create("node");
+    command.on("close", (data) => {
+      console.log(
+        `command finished with code ${data.code} and signal ${data.signal}`
+      );
+      console.log("time:", Date.now() - start);
+    });
+    command.on("error", (error) => console.error(`command error: "${error}"`));
+    command.stdout.on("data", (line) =>
+      console.log(`command stdout: "${line}"`)
+    );
+    command.stderr.on("data", (line) =>
+      console.log(`command stderr: "${line}"`)
+    );
+
+    // const child = await command.spawn();
+
+    const child = await command.spawn();
+    console.log("pid:", child.pid);
   });
 </script>
 

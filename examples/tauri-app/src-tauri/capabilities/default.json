@@ -20,6 +20,17 @@
     "shellx:allow-spawn",
     "shellx:allow-open",
     "shellx:allow-stdin-write",
-    "shellx:allow-kill"
+    "shellx:allow-kill",
+    {
+      "identifier": "shellx:allow-execute",
+      "allow": [
+        {
+          "name": "echo",
+          "cmd": "echo",
+          "args": true,
+          "sidecar": false
+        }
+      ]
+    }
   ]
 }
