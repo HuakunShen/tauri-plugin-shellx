@@ -19,15 +19,18 @@
   "scripts": {
     "build": "rollup -c",
     "prepublishOnly": "yarn build",
-    "pretest": "yarn build"
+    "pretest": "yarn build",
+    "build:docs": "typedoc guest-js/index.ts"
   },
   "dependencies": {
-    "@tauri-apps/api": ">=2.0.0-beta.6"
+    "@tauri-apps/api": ">=2.0.0-beta.6",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
     "rollup": "^4.9.6",
-    "typescript": "^5.3.3",
-    "tslib": "^2.6.2"
+    "tslib": "^2.6.2",
+    "typedoc": "^0.25.13",
+    "typescript": "^5.3.3"
   }
 }

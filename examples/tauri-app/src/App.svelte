@@ -1,16 +1,15 @@
 <script>
-  import Greet from './lib/Greet.svelte'
-  import { execute } from 'tauri-plugin-shellx-api'
+  import { onMount } from "svelte";
+  import Greet from "./lib/Greet.svelte";
+  import { Command } from "tauri-plugin-shellx-api";
 
-	let response = ''
-
-	function updateResponse(returnValue) {
-		response += `[${new Date().toLocaleTimeString()}]` + (typeof returnValue === 'string' ? returnValue : JSON.stringify(returnValue)) + '<br>'
-	}
-
-	function _execute() {
-		execute().then(updateResponse).catch(updateResponse)
-	}
+  onMount(async () => {
+    let result = await Command.create("exec-sh", [
+      "-c",
+      "echo 'Hello World!'",
+    ]).execute();
+    console.log(result);
+  });
 </script>
 
 <main class="container">
@@ -28,19 +27,13 @@
     </a>
   </div>
 
-  <p>
-    Click on the Tauri, Vite, and Svelte logos to learn more.
-  </p>
+  <p>Click on the Tauri, Vite, and Svelte logos to learn more.</p>
 
   <div class="row">
     <Greet />
   </div>
 
-  <div>
-    <button on:click="{_execute}">Execute</button>
-    <div>{@html response}</div>
-  </div>
-
+  <div></div>
 </main>
 
 <style>
