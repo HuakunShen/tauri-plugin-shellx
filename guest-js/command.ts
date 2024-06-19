@@ -53,7 +53,7 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
    * @param args Program arguments.
    * @param options Spawn options.
    */
-  private constructor(
+  constructor(
     program: string,
     args: string | string[] = [],
     options?: SpawnOptions
