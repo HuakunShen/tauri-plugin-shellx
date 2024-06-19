@@ -1,8 +1,10 @@
 [package]
 name = "tauri-plugin-shellx"
-version = "0.0.0"
-authors = [ "You" ]
-description = ""
+version = "0.0.1"
+authors = [ "Huakun" ]
+description = "Unlocked Tauri Shell Plugin"
+license = "MIT"
+repository = "https://github.com/HuakunShen/tauri-plugin-shellx.git"
 edition = "2021"
 rust-version = "1.70"
 exclude = ["/examples", "/webview-dist", "/webview-src", "/node_modules"]
