@@ -26,6 +26,7 @@ use tauri::{
 };
 
 mod commands;
+mod fix_path_env;
 mod config;
 mod error;
 pub mod open;
