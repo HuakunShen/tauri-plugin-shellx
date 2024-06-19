@@ -164,7 +164,7 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
       }
     };
 
-    return await invoke<number>("plugin:shell|spawn", {
+    return await invoke<number>("plugin:shellx|spawn", {
       program,
       args,
       options,
@@ -197,7 +197,7 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
       Object.freeze(args);
     }
 
-    return await invoke<ChildProcess<O>>("plugin:shell|execute", {
+    return await invoke<ChildProcess<O>>("plugin:shellx|execute", {
       program,
       args,
       options,

@@ -30,7 +30,7 @@ export class Child {
    * @since 2.0.0
    */
   async write(data: IOPayload): Promise<void> {
-    await invoke("plugin:shell|stdin_write", {
+    await invoke("plugin:shellx|stdin_write", {
       pid: this.pid,
       // correctly serialize Uint8Arrays
       buffer: typeof data === "string" ? data : Array.from(data),
@@ -45,7 +45,7 @@ export class Child {
    * @since 2.0.0
    */
   async kill(): Promise<void> {
-    await invoke("plugin:shell|kill", {
+    await invoke("plugin:shellx|kill", {
       cmd: "killChild",
       pid: this.pid,
     });

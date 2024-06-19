@@ -38,7 +38,7 @@ export type {
  * @since 2.0.0
  */
 export function open(path: string, openWith?: string) {
-  return invoke<void>("plugin:shell|open", {
+  return invoke<void>("plugin:shellx|open", {
     path,
     with: openWith,
   });

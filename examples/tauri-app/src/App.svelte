@@ -1,6 +1,5 @@
 <script>
   import { onMount } from "svelte";
-  import Greet from "./lib/Greet.svelte";
   import { Command } from "tauri-plugin-shellx-api";
 
   onMount(async () => {
@@ -29,9 +28,7 @@
 
   <p>Click on the Tauri, Vite, and Svelte logos to learn more.</p>
 
-  <div class="row">
-    <Greet />
-  </div>
+  <div class="row"></div>
 
   <div></div>
 </main>
