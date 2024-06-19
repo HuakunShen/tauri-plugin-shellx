@@ -169,13 +169,14 @@ fn prepare_cmd<R: Runtime>(
     Ok((command, encoding))
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Serialize)]
+#[serde(untagged)]
 enum Output {
     String(String),
     Raw(Vec<u8>),
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Serialize)]
 pub struct ChildProcessReturn {
     code: Option<i32>,
     signal: Option<i32>,
@@ -183,39 +184,9 @@ pub struct ChildProcessReturn {
     stderr: Output,
 }
 
-pub fn unlocked_prepare_cmd(
-    program: String,
-    args: ExecuteArgs,
-    options: CommandOptions,
-) -> crate::Result<(crate::process::Command, EncodingWrapper)> {
-    let args = match (args) {
-        (ExecuteArgs::None) => vec![],
-        (ExecuteArgs::List(list)) => list,
-        (ExecuteArgs::Single(string)) => vec![string],
-    };
-    let mut command = Command::new(program).args(args);
-    let encoding = match options.encoding {
-        Option::None => EncodingWrapper::Text(None),
-        Some(encoding) => match encoding.as_str() {
-            "raw" => {
-                command = command.set_raw_out(true);
-                EncodingWrapper::Raw
-            }
-            _ => {
-                if let Some(text_encoding) = Encoding::for_label(encoding.as_bytes()) {
-                    EncodingWrapper::Text(Some(text_encoding))
-                } else {
-                    return Err(crate::Error::UnknownEncoding(encoding));
-                }
-            }
-        },
-    };
-    Ok((command, encoding))
-}
-
 #[allow(clippy::too_many_arguments)]
 #[tauri::command]
-pub fn execute<R: Runtime>(
+pub async fn execute<R: Runtime>(
     window: Window<R>,
     program: String,
     args: ExecuteArgs,
@@ -223,11 +194,12 @@ pub fn execute<R: Runtime>(
     command_scope: CommandScope<crate::scope::ScopeAllowedCommand>,
     global_scope: GlobalScope<crate::scope::ScopeAllowedCommand>,
 ) -> crate::Result<ChildProcessReturn> {
-    // let (command, encoding) =
-    //     prepare_cmd(window, program, args, options, command_scope, global_scope)?;
-    let (command, encoding) = unlocked_prepare_cmd(program, args, options)?;
+    let (command, encoding) =
+        prepare_cmd(window, program, args, options, command_scope, global_scope)?;
+
     let mut command: std::process::Command = command.into();
     let output = command.output()?;
+
     let (stdout, stderr) = match encoding {
         EncodingWrapper::Text(Some(encoding)) => (
             Output::String(encoding.decode_with_bom_removal(&output.stdout).0.into()),
@@ -266,9 +238,9 @@ pub fn spawn<R: Runtime>(
     command_scope: CommandScope<crate::scope::ScopeAllowedCommand>,
     global_scope: GlobalScope<crate::scope::ScopeAllowedCommand>,
 ) -> crate::Result<ChildId> {
-    // let (command, encoding) =
-    //     prepare_cmd(window, program, args, options, command_scope, global_scope)?;
-    let (command, encoding) = unlocked_prepare_cmd(program, args, options)?;
+    let (command, encoding) =
+        prepare_cmd(window, program, args, options, command_scope, global_scope)?;
+
     let (mut rx, child) = command.spawn()?;
 
     let pid = child.pid();
