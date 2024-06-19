@@ -13,8 +13,8 @@ use tauri::{
 
 use crate::{
     open::Program,
-    process::{CommandEvent, TerminatedPayload},
-    scope::ExecuteArgs,
+    process::{Command, CommandEvent, TerminatedPayload},
+    scope::{Error, ExecuteArgs},
     Shell,
 };
 
@@ -169,13 +169,13 @@ fn prepare_cmd<R: Runtime>(
     Ok((command, encoding))
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 enum Output {
     String(String),
     Raw(Vec<u8>),
 }
 
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 pub struct ChildProcessReturn {
     code: Option<i32>,
     signal: Option<i32>,
@@ -195,12 +195,66 @@ pub fn execute<R: Runtime>(
     command_scope: CommandScope<crate::scope::ScopeAllowedCommand>,
     global_scope: GlobalScope<crate::scope::ScopeAllowedCommand>,
 ) -> crate::Result<ChildProcessReturn> {
-    let (command, encoding) =
-        prepare_cmd(window, program, args, options, command_scope, global_scope)?;
-
+    // let (command, encoding) =
+    //     prepare_cmd(window, program, args, options, command_scope, global_scope)?;
+    let args = match (args) {
+        (ExecuteArgs::None) => vec![],
+        (ExecuteArgs::List(list)) => list,
+        (ExecuteArgs::Single(string)) => vec![string],
+        // (Some(list), ExecuteArgs::List(args)) => list
+        //     .iter()
+        //     .enumerate()
+        //     .map(|(i, arg)| match arg {
+        //         ScopeAllowedArg::Fixed(fixed) => Ok(fixed.to_string()),
+        //         ScopeAllowedArg::Var { validator } => {
+        //             let value = args
+        //                 .get(i)
+        //                 .ok_or_else(|| Error::MissingVar(i, validator.to_string()))?
+        //                 .to_string();
+        //             if validator.is_match(&value) {
+        //                 Ok(value)
+        //             } else {
+        //                 Err(Error::Validation {
+        //                     index: i,
+        //                     validation: validator.to_string(),
+        //                 })
+        //             }
+        //         }
+        //     })
+        //     .collect(),
+        // (Some(list), arg) if arg.is_empty() && list.iter().all(ScopeAllowedArg::is_fixed) => list
+        //     .iter()
+        //     .map(|arg| match arg {
+        //         ScopeAllowedArg::Fixed(fixed) => Ok(fixed.to_string()),
+        //         _ => unreachable!(),
+        //     })
+        //     .collect(),
+        // (Some(list), _) if list.is_empty() => Err(Error::InvalidInput(program.into())),
+        // (Some(_), _) => Err(Error::InvalidInput(program.into())),
+    };
+    println!("args: {:?}", args);
+    let mut command = Command::new(program).args(args);
+    println!("command: {:?}", command);
+    let encoding = match options.encoding {
+        Option::None => EncodingWrapper::Text(None),
+        Some(encoding) => match encoding.as_str() {
+            "raw" => {
+                command = command.set_raw_out(true);
+                EncodingWrapper::Raw
+            }
+            _ => {
+                if let Some(text_encoding) = Encoding::for_label(encoding.as_bytes()) {
+                    EncodingWrapper::Text(Some(text_encoding))
+                } else {
+                    return Err(crate::Error::UnknownEncoding(encoding));
+                }
+            }
+        },
+    };
     let mut command: std::process::Command = command.into();
     let output = command.output()?;
-
+    // println!("output: {:?}", output);
+    // let stdout_str = String::from_utf8(output.stdout.clone())?;
     let (stdout, stderr) = match encoding {
         EncodingWrapper::Text(Some(encoding)) => (
             Output::String(encoding.decode_with_bom_removal(&output.stdout).0.into()),
@@ -212,11 +266,13 @@ pub fn execute<R: Runtime>(
         ),
         EncodingWrapper::Raw => (Output::Raw(output.stdout), Output::Raw(output.stderr)),
     };
-
+    println!("stdout: {:?}", stdout);
+    // convert stdout to string
+    // println!("stdout_str: {:?}", stdout_str);
     #[cfg(unix)]
     use std::os::unix::process::ExitStatusExt;
 
-    Ok(ChildProcessReturn {
+    let ret = ChildProcessReturn {
         code: output.status.code(),
         #[cfg(windows)]
         signal: None,
@@ -224,7 +280,9 @@ pub fn execute<R: Runtime>(
         signal: output.status.signal(),
         stdout,
         stderr,
-    })
+    };
+    println!("ret: {:#?}", ret);
+    Ok(ret)
 }
 
 #[allow(clippy::too_many_arguments)]

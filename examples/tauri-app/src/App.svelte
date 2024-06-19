@@ -3,11 +3,11 @@
   import { Command } from "tauri-plugin-shellx-api";
 
   onMount(async () => {
-    let result = await Command.create("exec-sh", [
-      "-c",
-      "echo 'Hello World!'",
+    let result = await Command.create("echo", [
+      "Hello World!",
     ]).execute();
     console.log(result);
+    console.log(result.stdout)
   });
 </script>
 
