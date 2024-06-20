@@ -21,8 +21,6 @@ JS/TS API Documentation: https://huakunshen.github.io/tauri-plugin-shellx/
 
 <h4 style="color:red;">Make sure your npm package version and rust crate version are the same, or you may encounter compatibility issues.</h4>
 
-
-
 ```bash
 npm install tauri-plugin-shellx-api
 cargo add tauri-plugin-shellx
@@ -47,6 +45,10 @@ tauri::Builder::default()
 ## Example
 
 An example app can be found at [./examples/tauri-app](./examples/tauri-app).
+
+This example app is a simplified terminal emulator.
+
+![](./assets/demo.png)
 
 ## API
 

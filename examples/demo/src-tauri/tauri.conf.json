@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "demo",
+        "title": "shellx demo",
         "width": 800,
         "height": 600
       }

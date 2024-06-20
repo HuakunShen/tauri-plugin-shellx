@@ -6,11 +6,13 @@
     hasCommand,
     likelyOnWindows
   } from 'tauri-plugin-shellx-api'
+  import { RotateCcwIcon } from 'lucide-svelte'
   import { Button } from '$lib/components/ui/button'
   import { Input } from '$lib/components/ui/input'
   import { type Block } from '$lib/types'
   import { onMount } from 'svelte'
 
+  let running = false
   let isOnWindows: boolean
   $: defaultShellExecuter = isOnWindows
     ? executePowershellScript
@@ -30,7 +32,9 @@
       command = ''
       return
     }
+    running = true
     const output = await defaultShellExecuter(command)
+    running = false
     blocks.push({ type: 'input', stdout: command, stderr: '' })
     if (output.code && output.code !== 0) {
       blocks.push({
@@ -60,9 +64,14 @@
   })
 </script>
 
+<div class="absolute w-full h-full flex justify-center items-center -z-10">
+  {#if running}
+    <RotateCcwIcon class="animate-spin w-28 h-28 opacity-30" />
+  {/if}
+</div>
 <div class="py-3 px-4 flex flex-col h-screen">
   <div
-    class="grow overflow-y-auto flex flex-col space-y-2"
+    class="grow overflow-y-auto flex flex-col space-y-2 font-mono"
     bind:this={blocksElement}
   >
     {#each blocks as block}
@@ -75,13 +84,20 @@
         <div class="pl-5">
           <div class="text-red-500">Status Code: {block.status}</div>
           {#if block.stdout}
-            <div>stdout: {block.stdout}</div>
+            <div><span class="opacity-50">stdout:</span> {block.stdout}</div>
           {/if}
-          <div class="text-red-500">stderr: {block.stderr}</div>
+          {#if block.stdout}
+            <div class="text-red-500">stderr: {block.stderr}</div>
+          {/if}
         </div>
       {:else}
         <div class="flex space-x-2 pl-5">
-          <span>{block.stdout}</span>
+          {#if block.stdout}
+            <div><span class="opacity-50">stdout:</span> {block.stdout}</div>
+          {/if}
+          {#if block.stderr}
+            <div class="text-red-500">stderr: {block.stderr}</div>
+          {/if}
         </div>
       {/if}
     {/each}
@@ -89,10 +105,11 @@
   <form class="flex w-full items-center space-x-2" on:submit={onSubmit}>
     <Input
       type="text"
+      disabled={running}
       placeholder="Enter Command"
       bind:value={command}
       autofocus
     />
-    <Button type="submit">Run</Button>
+    <Button type="submit" disabled={running}>Run</Button>
   </form>
 </div>
