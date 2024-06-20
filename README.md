@@ -1,5 +1,7 @@
 # Tauri Plugin Shellx
 
+<h3 style="color:red;">Currently this plugin only supports Tauri v2</h3>
+
 [![Deploy Docs](https://github.com/HuakunShen/tauri-plugin-shellx/actions/workflows/docs.yml/badge.svg)](https://github.com/HuakunShen/tauri-plugin-shellx/actions/workflows/docs.yml)
 
 This is a mod of the original official Tauri plugin [tauri-plugin-shell](https://github.com/tauri-apps/tauri-plugin-shell).
@@ -17,13 +19,13 @@ JS/TS API Documentation: https://huakunshen.github.io/tauri-plugin-shellx/
 - NPM Package: https://www.npmjs.com/package/tauri-plugin-shellx-api
 - Rust Crate: https://crates.io/crates/tauri-plugin-shellx
 
-Make sure your npm package version and rust crate version are the same, or you may encounter compatibility issues.
+<h4 style="color:red;">Make sure your npm package version and rust crate version are the same, or you may encounter compatibility issues.</h4>
 
-<h2 style="color:red;">Use version 1.x for Tauri 1.x, and version 2.x for Tauri 2.x.</h2>
+
 
 ```bash
-npm install tauri-plugin-shellx-api@1
-cargo add tauri-plugin-shellx --version 2
+npm install tauri-plugin-shellx-api
+cargo add tauri-plugin-shellx
 ```
 
 ## Usage
