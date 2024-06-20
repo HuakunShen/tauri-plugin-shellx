@@ -12,6 +12,20 @@ This plugin allows you to execute any shell commands freely without any restrict
 
 JS/TS API Documentation: https://huakunshen.github.io/tauri-plugin-shellx/
 
+## Installation
+
+- NPM Package: https://www.npmjs.com/package/tauri-plugin-shellx-api
+- Rust Crate: https://crates.io/crates/tauri-plugin-shellx
+
+Make sure your npm package version and rust crate version are the same, or you may encounter compatibility issues.
+
+<h2 style="color:red;">Use version 1.x for Tauri 1.x, and version 2.x for Tauri 2.x.</h2>
+
+```bash
+npm install tauri-plugin-shellx-api@1
+cargo add tauri-plugin-shellx --version 2
+```
+
 ## Usage
 
 Install rust crate from https://crates.io/crates/tauri-plugin-shellx
