@@ -1,6 +1,6 @@
 {
   "name": "tauri-plugin-shellx-api",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": "Huakun",
   "description": "Unlocked Tauri Shell Plugin",
   "type": "module",
@@ -12,6 +12,11 @@
     "import": "./dist-js/index.js",
     "require": "./dist-js/index.cjs"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HuakunShen/tauri-plugin-shellx.git"
+  },
+  "license": "MIT",
   "files": [
     "dist-js",
     "README.md"
