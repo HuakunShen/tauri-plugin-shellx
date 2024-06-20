@@ -12,6 +12,8 @@
     "resources:default",
     "menu:default",
     "tray:default",
-    "shell:allow-open"
+    "shellx:allow-open",
+    "shellx:allow-execute",
+    "shellx:allow-spawn"
   ]
 }
