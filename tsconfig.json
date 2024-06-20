@@ -7,8 +7,16 @@
     "strict": true,
     "noUnusedLocals": true,
     "noImplicitAny": true,
-    "noEmit": true
+    "noEmit": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist-js",
   },
-  "include": ["guest-js/*.ts"],
-  "exclude": ["dist-js", "node_modules"]
+  "include": [
+    "guest-js/*.ts"
+  ],
+  "exclude": [
+    "dist-js",
+    "node_modules"
+  ]
 }

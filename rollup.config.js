@@ -19,8 +19,8 @@ export default {
   ],
   plugins: [
     typescript({
-      declaration: true,
-      declarationDir: `./${pkg.exports.import.split('/')[0]}`
+      // declaration: true,
+      // declarationDir: `./${pkg.exports.import.split('/')[0]}`
     })
   ],
   external: [
