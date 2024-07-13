@@ -74,7 +74,7 @@ const cmd = Command.create('ffmpeg', [
   '/Users/xxx/output.mp4'
 ])
 
-command.on('close', (data) => {
+cmd.on('close', (data) => {
   console.log(
     `command finished with code ${data.code} and signal ${data.signal}`
   )
@@ -83,7 +83,7 @@ cmd.on('error', (error) => console.error(`command error: "${error}"`))
 cmd.stdout.on('data', (line) => console.log(`command stdout: "${line}"`))
 cmd.stderr.on('data', (line) => console.log(`command stderr: "${line}"`))
 
-const child = await command.spawn()
+const child = await cmd.spawn()
 console.log('pid:', child.pid)
 await child.kill()
 ```
