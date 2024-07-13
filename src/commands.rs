@@ -7,7 +7,7 @@ use std::{collections::HashMap, future::Future, path::PathBuf, pin::Pin, string:
 use encoding_rs::Encoding;
 use serde::{Deserialize, Serialize};
 use tauri::{
-    ipc::{Channel, CommandScope, GlobalScope},
+    ipc::{Channel, CommandScope, GlobalScope, InvokeBody},
     Manager, Runtime, State, Window,
 };
 
@@ -284,17 +284,29 @@ pub fn spawn<R: Runtime>(
             if matches!(event, crate::process::CommandEvent::Terminated(_)) {
                 children.lock().unwrap().remove(&pid);
             };
+
             let js_event = JSCommandEvent::new(event, encoding);
 
-            if on_event.send(&js_event).is_err() {
+            let invoke_body: InvokeBody =
+                tauri::ipc::InvokeBody::Json(serde_json::to_value(&js_event).unwrap());
+
+            if on_event.send(invoke_body).is_err() {
                 fn send<'a>(
                     on_event: &'a Channel,
                     js_event: &'a JSCommandEvent,
                 ) -> Pin<Box<dyn Future<Output = ()> + Send + 'a>> {
                     Box::pin(async move {
                         tokio::time::sleep(std::time::Duration::from_millis(15)).await;
-                        if on_event.send(js_event).is_err() {
-                            send(on_event, js_event).await;
+                        match on_event
+                            .send(tauri::ipc::InvokeBody::Json(
+                                serde_json::to_value(js_event).unwrap(),
+                            ))
+                            .is_err()
+                        {
+                            true => {
+                                send(on_event, js_event).await;
+                            }
+                            false => (),
                         }
                     })
                 }
