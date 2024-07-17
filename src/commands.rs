@@ -14,7 +14,7 @@ use tauri::{
 use crate::{
     open::Program,
     process::{Command, CommandEvent, TerminatedPayload},
-    scope::{Error, ExecuteArgs},
+    scope::ExecuteArgs,
     Shell,
 };
 
@@ -23,7 +23,7 @@ type ChildId = u32;
 #[derive(Debug, Clone, Serialize)]
 #[serde(tag = "event", content = "payload")]
 #[non_exhaustive]
-enum JSCommandEvent {
+pub enum JSCommandEvent {
     /// Stderr bytes until a newline (\n) or carriage return (\r) is found.
     Stderr(Buffer),
     /// Stdout bytes until a newline (\n) or carriage return (\r) is found.
@@ -189,10 +189,10 @@ pub fn unlocked_prepare_cmd(
     args: ExecuteArgs,
     options: CommandOptions,
 ) -> crate::Result<(crate::process::Command, EncodingWrapper)> {
-    let args = match (args) {
-        (ExecuteArgs::None) => vec![],
-        (ExecuteArgs::List(list)) => list,
-        (ExecuteArgs::Single(string)) => vec![string],
+    let args = match args {
+        ExecuteArgs::None => vec![],
+        ExecuteArgs::List(list) => list,
+        ExecuteArgs::Single(string) => vec![string],
     };
     let mut command = Command::new(program).args(args);
     let encoding = match options.encoding {
@@ -264,7 +264,7 @@ pub fn spawn<R: Runtime>(
     shell: State<'_, Shell<R>>,
     program: String,
     args: ExecuteArgs,
-    on_event: Channel,
+    on_event: Channel<JSCommandEvent>,
     options: CommandOptions,
     command_scope: CommandScope<crate::scope::ScopeAllowedCommand>,
     global_scope: GlobalScope<crate::scope::ScopeAllowedCommand>,
@@ -286,14 +286,14 @@ pub fn spawn<R: Runtime>(
             };
             let js_event = JSCommandEvent::new(event, encoding);
 
-            if on_event.send(&js_event).is_err() {
+            if on_event.send(js_event.clone()).is_err() {
                 fn send<'a>(
-                    on_event: &'a Channel,
+                    on_event: &'a Channel<JSCommandEvent>,
                     js_event: &'a JSCommandEvent,
                 ) -> Pin<Box<dyn Future<Output = ()> + Send + 'a>> {
                     Box::pin(async move {
                         tokio::time::sleep(std::time::Duration::from_millis(15)).await;
-                        if on_event.send(js_event).is_err() {
+                        if on_event.send(js_event.clone()).is_err() {
                             send(on_event, js_event).await;
                         }
                     })
@@ -302,7 +302,6 @@ pub fn spawn<R: Runtime>(
             }
         }
     });
-
     Ok(pid)
 }
 

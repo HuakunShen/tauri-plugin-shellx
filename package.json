@@ -1,6 +1,6 @@
 {
   "name": "tauri-plugin-shellx-api",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "author": "Huakun",
   "description": "Unlocked Tauri Shell Plugin",
   "type": "module",

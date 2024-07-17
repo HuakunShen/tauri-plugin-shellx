@@ -77,12 +77,3 @@ pub fn fix_vars(vars: &[&str]) -> std::result::Result<(), Error> {
 pub fn fix() -> std::result::Result<(), Error> {
     fix_vars(&["PATH"])
 }
-
-/// Reads the shell configuration to properly set all environment variables.
-///
-/// ## Platform-specific
-///
-/// - **Windows**: Does nothing as the environment variables are already set.
-pub fn fix_all_vars() -> std::result::Result<(), Error> {
-    fix_vars(&[])
-}

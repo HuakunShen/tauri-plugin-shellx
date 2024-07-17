@@ -26,14 +26,13 @@ use tauri::{
 };
 
 mod commands;
-mod fix_path_env;
 mod config;
 mod error;
+mod fix_path_env;
 pub mod open;
 pub mod process;
 mod scope;
 mod scope_entry;
-mod desktop;
 
 pub use error::Error;
 type Result<T> = std::result::Result<T, Error>;
