@@ -1,0 +1,5 @@
+{
+  "name": "@hk/tauri-plugin-shellx-api",
+  "version": "2.0.8",
+  "exports": "./guest-js/index.ts"
+}
