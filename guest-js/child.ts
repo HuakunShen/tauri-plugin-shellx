@@ -29,11 +29,10 @@ export class Child {
    *
    * @since 2.0.0
    */
-  async write(data: IOPayload): Promise<void> {
+  async write(data: IOPayload | number[]): Promise<void> {
     await invoke('plugin:shellx|stdin_write', {
       pid: this.pid,
-      // correctly serialize Uint8Arrays
-      buffer: typeof data === 'string' ? data : Array.from(data)
+      buffer: data
     })
   }
 

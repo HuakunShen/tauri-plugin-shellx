@@ -4,7 +4,8 @@
     executePowershellScript,
     executePythonScript,
     hasCommand,
-    likelyOnWindows
+    likelyOnWindows,
+    Command
   } from 'tauri-plugin-shellx-api'
   import { RotateCcwIcon } from 'lucide-svelte'
   import { Button } from '$lib/components/ui/button'
@@ -59,7 +60,12 @@
   }
 
   onMount(async () => {
-    isOnWindows = await likelyOnWindows()
+    // isOnWindows = await likelyOnWindows()
+    console.log(
+      "PWD from worker-ext",
+      await Command.create("pwd", [], { cwd: "/Users/hacker/Desktop" }).execute()
+    )
+
     scrollToBottom()
   })
 </script>

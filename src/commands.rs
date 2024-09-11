@@ -195,6 +195,14 @@ pub fn unlocked_prepare_cmd(
         ExecuteArgs::Single(string) => vec![string],
     };
     let mut command = Command::new(program).args(args);
+    if let Some(cwd) = options.cwd {
+        command = command.current_dir(cwd);
+    }
+    if let Some(env) = options.env {
+        command = command.envs(env);
+    } else {
+        command = command.env_clear();
+    }
     let encoding = match options.encoding {
         Option::None => EncodingWrapper::Text(None),
         Some(encoding) => match encoding.as_str() {
