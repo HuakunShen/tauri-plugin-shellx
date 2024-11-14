@@ -20,4 +20,4 @@ jobs:
       - name: Deno Install
         run: deno install
       - name: Publish package
-        run: npx jsr publish
+        run: npx jsr publish --allow-slow-types
