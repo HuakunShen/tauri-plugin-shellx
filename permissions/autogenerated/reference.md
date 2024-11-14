@@ -189,4 +189,30 @@ Denies the stdin_write command without any pre-configured scope.
 
 </td>
 </tr>
+
+<tr>
+<td>
+
+`shellx:allow-where-is-command`
+
+</td>
+<td>
+
+Enables the where_is_command command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`shellx:deny-where-is-command`
+
+</td>
+<td>
+
+Denies the where_is_command command without any pre-configured scope.
+
+</td>
+</tr>
 </table>

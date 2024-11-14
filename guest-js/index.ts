@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/core'
 export { Child } from './child'
-export { Command } from './command'
+export { Command, whereIsCommand } from './command'
 export * from './script'
 export * from './util'
 export { EventEmitter } from './event'

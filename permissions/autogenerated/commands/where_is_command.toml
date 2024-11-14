@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-where-is-command"
+description = "Enables the where_is_command command without any pre-configured scope."
+commands.allow = ["where_is_command"]
+
+[[permission]]
+identifier = "deny-where-is-command"
+description = "Denies the where_is_command command without any pre-configured scope."
+commands.deny = ["where_is_command"]

@@ -16,6 +16,7 @@
     "core:tray:default",
     "shellx:allow-open",
     "shellx:allow-execute",
-    "shellx:allow-spawn"
+    "shellx:allow-spawn",
+    "shellx:allow-where-is-command"
   ]
 }

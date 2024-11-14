@@ -204,3 +204,7 @@ export class Command<O extends IOPayload> extends EventEmitter<CommandEvents> {
     })
   }
 }
+
+export function whereIsCommand(cmd: string): Promise<string> {
+  return invoke<string>('plugin:shellx|where_is_command', { cmd })
+}

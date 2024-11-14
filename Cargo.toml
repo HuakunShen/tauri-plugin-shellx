@@ -1,6 +1,6 @@
 [package]
 name = "tauri-plugin-shellx"
-version = "2.0.11"
+version = "2.0.12"
 authors = ["Huakun"]
 description = "Unlocked Tauri Shell Plugin"
 license = "MIT"
@@ -11,20 +11,20 @@ exclude = ["/examples", "/webview-dist", "/webview-src", "/node_modules"]
 links = "tauri-plugin-shellx"
 
 [dependencies]
-tauri = { version = "2.0.1" }
-serde = "1.0"
+tauri = { version = "2.1.1" }
+serde = "1.0.215"
 thiserror = "1.0"
 encoding_rs = "0.8"
 os_pipe = "1"
 shared_child = "1"
-serde_json = "1.0.117"
+serde_json = "1.0.132"
 schemars = "0.8"
 regex = "1"
 open = { version = "5", features = ["shellexecute-on-windows"] }
-tokio = { version = "1.38.0", features = ["time"] }
+tokio = { version = "1.41.1", features = ["time"] }
 
 [target."cfg(not(target_os = \"windows\"))".dependencies]
 strip-ansi-escapes = "0.2"
 
 [build-dependencies]
-tauri-plugin = { version = "2.0.1", features = ["build"] }
+tauri-plugin = { version = "2.0.3", features = ["build"] }

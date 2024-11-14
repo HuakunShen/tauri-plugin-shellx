@@ -363,6 +363,16 @@
           "description": "Denies the stdin_write command without any pre-configured scope.",
           "type": "string",
           "const": "deny-stdin-write"
+        },
+        {
+          "description": "Enables the where_is_command command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-where-is-command"
+        },
+        {
+          "description": "Denies the where_is_command command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-where-is-command"
         }
       ]
     }

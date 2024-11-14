@@ -87,7 +87,8 @@ pub fn init<R: Runtime>(unlocked: bool) -> TauriPlugin<R, Option<config::Config>
             commands::stdin_write,
             commands::kill,
             commands::open,
-            commands::fix_path_env
+            commands::fix_path_env,
+            commands::where_is_command
         ])
         .setup(move |app, api| {
             let default_config = config::Config::default();

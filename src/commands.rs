@@ -356,3 +356,25 @@ pub fn fix_path_env() -> crate::Result<()> {
     let _ = crate::fix_path_env::fix();
     Ok(())
 }
+
+#[tauri::command]
+pub fn where_is_command(cmd: String) -> crate::Result<String> {
+    // if windows, run powershell Get-Command
+    // if unix, run which
+
+    #[cfg(windows)]
+    {
+        let output = std::process::Command::new("powershell")
+            .arg(format!("(Get-Command {cmd}).path"))
+            .output()?;
+        let stdout = String::from_utf8(output.stdout)?;
+        Ok(stdout)
+    }
+
+    #[cfg(unix)]
+    {
+        let output = std::process::Command::new("which").arg(cmd).output()?;
+        let stdout = String::from_utf8(output.stdout)?;
+        Ok(stdout)
+    }
+}

@@ -5,6 +5,7 @@ const COMMANDS: &[&str] = &[
     "kill",
     "open",
     "fix_path_env",
+    "where_is_command"
 ];
 
 fn main() {
