@@ -1,4 +1,4 @@
-import { Command } from './command'
+import { Command, whereIsCommand } from './command'
 
 /**
  * Run powershell.exe -Command 'echo $env:OS' to determine if the current platform is likely to be Windows.
@@ -21,10 +21,5 @@ export function likelyOnWindows(): Promise<boolean> {
  * @returns
  */
 export async function hasCommand(command: string): Promise<boolean> {
-  const targetCmd = command.split(' ')[0]
-  const isOnWindows = await likelyOnWindows()
-  const whereCmd = isOnWindows ? 'where' : 'which'
-  const cmd = Command.create(whereCmd, [targetCmd])
-  const out = await cmd.execute()
-  return out.code === 0
+  return whereIsCommand(command).then((path) => !!path && path.length > 0)
 }
