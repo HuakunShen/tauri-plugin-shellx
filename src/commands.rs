@@ -2,10 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-use std::{collections::HashMap, future::Future, path::PathBuf, pin::Pin, string::FromUtf8Error};
-
 use encoding_rs::Encoding;
 use serde::{Deserialize, Serialize};
+use std::{collections::HashMap, future::Future, path::PathBuf, pin::Pin, string::FromUtf8Error};
 use tauri::{
     ipc::{Channel, CommandScope, GlobalScope},
     Manager, Runtime, State, Window,
@@ -338,6 +337,28 @@ pub fn kill<R: Runtime>(
     if let Some(child) = shell.children.lock().unwrap().remove(&pid) {
         child.kill()?;
     }
+    Ok(())
+}
+
+#[cfg(target_family = "unix")]
+#[tauri::command]
+/// Kill any provided pid, don't care if it's a child stored in State or not
+pub async fn kill_pid(pid: ChildId) -> crate::Result<()> {
+    Command::new("kill")
+        .args(["-9", &pid.to_string()])
+        .output()
+        .await?;
+    Ok(())
+}
+
+#[cfg(target_os = "windows")]
+#[tauri::command]
+/// Kill any provided pid, don't care if it's a child stored in State or not
+pub async fn kill_pid(pid: ChildId) -> crate::Result<()> {
+    Command::new("taskkill")
+        .args(["/F", "/PID", &pid.to_string()])
+        .output()
+        .await?;
     Ok(())
 }
 

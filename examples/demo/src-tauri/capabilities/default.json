@@ -17,6 +17,7 @@
     "shellx:allow-open",
     "shellx:allow-execute",
     "shellx:allow-spawn",
-    "shellx:allow-where-is-command"
+    "shellx:allow-where-is-command",
+    "shellx:allow-kill-pid"
   ]
 }

@@ -86,6 +86,7 @@ pub fn init<R: Runtime>(unlocked: bool) -> TauriPlugin<R, Option<config::Config>
             commands::spawn,
             commands::stdin_write,
             commands::kill,
+            commands::kill_pid,
             commands::open,
             commands::fix_path_env,
             commands::where_is_command

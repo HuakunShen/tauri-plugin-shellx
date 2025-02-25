@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-kill-pid"
+description = "Enables the kill_pid command without any pre-configured scope."
+commands.allow = ["kill_pid"]
+
+[[permission]]
+identifier = "deny-kill-pid"
+description = "Denies the kill_pid command without any pre-configured scope."
+commands.deny = ["kill_pid"]

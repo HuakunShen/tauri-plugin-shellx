@@ -3,6 +3,7 @@ const COMMANDS: &[&str] = &[
     "spawn",
     "stdin_write",
     "kill",
+    "kill_pid",
     "open",
     "fix_path_env",
     "where_is_command"

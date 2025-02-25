@@ -89,6 +89,32 @@ Denies the kill command without any pre-configured scope.
 <tr>
 <td>
 
+`shellx:allow-kill-pid`
+
+</td>
+<td>
+
+Enables the kill_pid command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`shellx:deny-kill-pid`
+
+</td>
+<td>
+
+Denies the kill_pid command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
 `shellx:allow-open`
 
 </td>

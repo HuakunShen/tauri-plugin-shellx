@@ -325,6 +325,16 @@
           "const": "deny-kill"
         },
         {
+          "description": "Enables the kill_pid command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-kill-pid"
+        },
+        {
+          "description": "Denies the kill_pid command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-kill-pid"
+        },
+        {
           "description": "Enables the open command without any pre-configured scope.",
           "type": "string",
           "const": "allow-open"

@@ -6,7 +6,8 @@
     hasCommand,
     likelyOnWindows,
     Command,
-    whereIsCommand
+    whereIsCommand,
+    killPid
   } from 'tauri-plugin-shellx-api'
   import { RotateCcwIcon } from 'lucide-svelte'
   import { Button } from '$lib/components/ui/button'

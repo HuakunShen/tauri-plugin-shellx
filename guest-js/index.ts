@@ -46,3 +46,14 @@ export function open(path: string, openWith?: string) {
 export function fixPathEnv() {
   return invoke<void>('plugin:shellx|fix_path_env')
 }
+
+/**
+ * Kill any provided pid, don't care if it's a child stored in State or not
+ * @param pid
+ * @returns
+ */
+export function killPid(pid: number) {
+  return invoke<void>('plugin:shellx|kill_pid', {
+    pid
+  })
+}
