@@ -8,6 +8,12 @@ This is a mod of the original official Tauri plugin [tauri-plugin-shell](https:/
 
 The purpose is to provide the option to remove restrictions on shell commands (every command has to be pre-defined in capability).
 
+> [!CAUTION]
+> It is not recommended to use this plugin.
+> This plugin was created for another project https://github.com/kunkunsh/kunkun, which contains an extension system.
+> I implemented a custom permission control layer in JS to ensure security.
+> You should use the original shell plugin unless there is a reason you have to unlock the permissions control.
+
 This plugin allows you to execute any shell commands freely without any restrictions.
 
 ## Docs
