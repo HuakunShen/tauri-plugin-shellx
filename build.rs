@@ -6,7 +6,7 @@ const COMMANDS: &[&str] = &[
     "kill_pid",
     "open",
     "fix_path_env",
-    "where_is_command"
+    "where_is_command",
 ];
 
 fn main() {
