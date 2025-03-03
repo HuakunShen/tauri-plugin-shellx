@@ -109,7 +109,7 @@ impl Program {
 /// # Examples
 ///
 /// ```rust,no_run
-/// use tauri_plugin_shell::ShellExt;
+/// use tauri_plugin_shellx::ShellExt;
 /// tauri::Builder::default()
 ///   .setup(|app| {
 ///     // open the given URL on the system default browser

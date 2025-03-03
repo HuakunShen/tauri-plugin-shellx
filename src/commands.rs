@@ -386,7 +386,12 @@ pub fn where_is_command(cmd: String) -> crate::Result<String> {
     #[cfg(windows)]
     {
         let output = std::process::Command::new("powershell")
-            .arg(format!("(Get-Command {cmd}).path"))
+            .args([
+                "-WindowStyle",
+                "Hidden",
+                "-Command",
+                &format!("(Get-Command {cmd}).path"),
+            ])
             .output()?;
         let stdout = String::from_utf8(output.stdout)?;
         Ok(stdout)

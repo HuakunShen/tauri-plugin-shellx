@@ -1,6 +1,6 @@
 {
   "name": "@hk/tauri-plugin-shellx-api",
-  "version": "2.0.15",
+  "version": "2.0.16",
   "license": "MIT",
   "exports": "./guest-js/index.ts"
 }

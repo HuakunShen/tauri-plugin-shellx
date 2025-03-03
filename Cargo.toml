@@ -1,6 +1,6 @@
 [package]
 name = "tauri-plugin-shellx"
-version = "2.0.15"
+version = "2.0.16"
 authors = ["Huakun"]
 description = "Unlocked Tauri Shell Plugin"
 license = "MIT"

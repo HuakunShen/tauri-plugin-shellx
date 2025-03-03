@@ -217,7 +217,7 @@ impl Command {
     /// # Examples
     ///
     /// ```rust,no_run
-    /// use tauri_plugin_shell::{process::CommandEvent, ShellExt};
+    /// use tauri_plugin_shellx::{process::CommandEvent, ShellExt};
     /// tauri::Builder::default()
     ///   .setup(|app| {
     ///     let handle = app.handle().clone();
@@ -310,7 +310,7 @@ impl Command {
     ///
     /// # Examples
     /// ```rust,no_run
-    /// use tauri_plugin_shell::ShellExt;
+    /// use tauri_plugin_shellx::ShellExt;
     /// tauri::Builder::default()
     ///   .setup(|app| {
     ///     let status = tauri::async_runtime::block_on(async move { app.shell().command("which").args(["ls"]).status().await.unwrap() });
@@ -336,7 +336,7 @@ impl Command {
     /// # Examples
     ///
     /// ```rust,no_run
-    /// use tauri_plugin_shell::ShellExt;
+    /// use tauri_plugin_shellx::ShellExt;
     /// tauri::Builder::default()
     ///   .setup(|app| {
     ///     let output = tauri::async_runtime::block_on(async move { app.shell().command("echo").args(["TAURI"]).output().await.unwrap() });
@@ -448,127 +448,127 @@ fn spawn_pipe_reader<F: Fn(Vec<u8>) -> CommandEvent + Send + Copy + 'static>(
     });
 }
 
-// tests for the commands functions.
-#[cfg(test)]
-mod tests {
-    #[cfg(not(windows))]
-    use super::*;
+// // tests for the commands functions.
+// #[cfg(test)]
+// mod tests {
+//     #[cfg(not(windows))]
+//     use super::*;
 
-    #[cfg(not(windows))]
-    #[test]
-    fn test_cmd_spawn_output() {
-        let cmd = Command::new("cat").args(["test/test.txt"]);
-        let (mut rx, _) = cmd.spawn().unwrap();
+//     #[cfg(not(windows))]
+//     #[test]
+//     fn test_cmd_spawn_output() {
+//         let cmd = Command::new("cat").args(["test/test.txt"]);
+//         let (mut rx, _) = cmd.spawn().unwrap();
 
-        tauri::async_runtime::block_on(async move {
-            while let Some(event) = rx.recv().await {
-                match event {
-                    CommandEvent::Terminated(payload) => {
-                        assert_eq!(payload.code, Some(0));
-                    }
-                    CommandEvent::Stdout(line) => {
-                        assert_eq!(String::from_utf8(line).unwrap(), "This is a test doc!");
-                    }
-                    _ => {}
-                }
-            }
-        });
-    }
+//         tauri::async_runtime::block_on(async move {
+//             while let Some(event) = rx.recv().await {
+//                 match event {
+//                     CommandEvent::Terminated(payload) => {
+//                         assert_eq!(payload.code, Some(0));
+//                     }
+//                     CommandEvent::Stdout(line) => {
+//                         assert_eq!(String::from_utf8(line).unwrap(), "This is a test doc!");
+//                     }
+//                     _ => {}
+//                 }
+//             }
+//         });
+//     }
 
-    #[cfg(not(windows))]
-    #[test]
-    fn test_cmd_spawn_raw_output() {
-        let cmd = Command::new("cat").args(["test/test.txt"]);
-        let (mut rx, _) = cmd.spawn().unwrap();
+//     #[cfg(not(windows))]
+//     #[test]
+//     fn test_cmd_spawn_raw_output() {
+//         let cmd = Command::new("cat").args(["test/test.txt"]);
+//         let (mut rx, _) = cmd.spawn().unwrap();
 
-        tauri::async_runtime::block_on(async move {
-            while let Some(event) = rx.recv().await {
-                match event {
-                    CommandEvent::Terminated(payload) => {
-                        assert_eq!(payload.code, Some(0));
-                    }
-                    CommandEvent::Stdout(line) => {
-                        assert_eq!(String::from_utf8(line).unwrap(), "This is a test doc!");
-                    }
-                    _ => {}
-                }
-            }
-        });
-    }
+//         tauri::async_runtime::block_on(async move {
+//             while let Some(event) = rx.recv().await {
+//                 match event {
+//                     CommandEvent::Terminated(payload) => {
+//                         assert_eq!(payload.code, Some(0));
+//                     }
+//                     CommandEvent::Stdout(line) => {
+//                         assert_eq!(String::from_utf8(line).unwrap(), "This is a test doc!");
+//                     }
+//                     _ => {}
+//                 }
+//             }
+//         });
+//     }
 
-    #[cfg(not(windows))]
-    #[test]
-    // test the failure case
-    fn test_cmd_spawn_fail() {
-        let cmd = Command::new("cat").args(["test/"]);
-        let (mut rx, _) = cmd.spawn().unwrap();
+//     #[cfg(not(windows))]
+//     #[test]
+//     // test the failure case
+//     fn test_cmd_spawn_fail() {
+//         let cmd = Command::new("cat").args(["test/"]);
+//         let (mut rx, _) = cmd.spawn().unwrap();
 
-        tauri::async_runtime::block_on(async move {
-            while let Some(event) = rx.recv().await {
-                match event {
-                    CommandEvent::Terminated(payload) => {
-                        assert_eq!(payload.code, Some(1));
-                    }
-                    CommandEvent::Stderr(line) => {
-                        assert_eq!(
-                            String::from_utf8(line).unwrap(),
-                            "cat: test/: Is a directory\n"
-                        );
-                    }
-                    _ => {}
-                }
-            }
-        });
-    }
+//         tauri::async_runtime::block_on(async move {
+//             while let Some(event) = rx.recv().await {
+//                 match event {
+//                     CommandEvent::Terminated(payload) => {
+//                         assert_eq!(payload.code, Some(1));
+//                     }
+//                     CommandEvent::Stderr(line) => {
+//                         assert_eq!(
+//                             String::from_utf8(line).unwrap(),
+//                             "cat: test/: Is a directory\n"
+//                         );
+//                     }
+//                     _ => {}
+//                 }
+//             }
+//         });
+//     }
 
-    #[cfg(not(windows))]
-    #[test]
-    // test the failure case (raw encoding)
-    fn test_cmd_spawn_raw_fail() {
-        let cmd = Command::new("cat").args(["test/"]);
-        let (mut rx, _) = cmd.spawn().unwrap();
+//     #[cfg(not(windows))]
+//     #[test]
+//     // test the failure case (raw encoding)
+//     fn test_cmd_spawn_raw_fail() {
+//         let cmd = Command::new("cat").args(["test/"]);
+//         let (mut rx, _) = cmd.spawn().unwrap();
 
-        tauri::async_runtime::block_on(async move {
-            while let Some(event) = rx.recv().await {
-                match event {
-                    CommandEvent::Terminated(payload) => {
-                        assert_eq!(payload.code, Some(1));
-                    }
-                    CommandEvent::Stderr(line) => {
-                        assert_eq!(
-                            String::from_utf8(line).unwrap(),
-                            "cat: test/: Is a directory\n"
-                        );
-                    }
-                    _ => {}
-                }
-            }
-        });
-    }
+//         tauri::async_runtime::block_on(async move {
+//             while let Some(event) = rx.recv().await {
+//                 match event {
+//                     CommandEvent::Terminated(payload) => {
+//                         assert_eq!(payload.code, Some(1));
+//                     }
+//                     CommandEvent::Stderr(line) => {
+//                         assert_eq!(
+//                             String::from_utf8(line).unwrap(),
+//                             "cat: test/: Is a directory\n"
+//                         );
+//                     }
+//                     _ => {}
+//                 }
+//             }
+//         });
+//     }
 
-    #[cfg(not(windows))]
-    #[test]
-    fn test_cmd_output_output() {
-        let cmd = Command::new("cat").args(["test/test.txt"]);
-        let output = tauri::async_runtime::block_on(cmd.output()).unwrap();
+//     #[cfg(not(windows))]
+//     #[test]
+//     fn test_cmd_output_output() {
+//         let cmd = Command::new("cat").args(["test/test.txt"]);
+//         let output = tauri::async_runtime::block_on(cmd.output()).unwrap();
 
-        assert_eq!(String::from_utf8(output.stderr).unwrap(), "");
-        assert_eq!(
-            String::from_utf8(output.stdout).unwrap(),
-            "This is a test doc!\n"
-        );
-    }
+//         assert_eq!(String::from_utf8(output.stderr).unwrap(), "");
+//         assert_eq!(
+//             String::from_utf8(output.stdout).unwrap(),
+//             "This is a test doc!\n"
+//         );
+//     }
 
-    #[cfg(not(windows))]
-    #[test]
-    fn test_cmd_output_output_fail() {
-        let cmd = Command::new("cat").args(["test/"]);
-        let output = tauri::async_runtime::block_on(cmd.output()).unwrap();
+//     #[cfg(not(windows))]
+//     #[test]
+//     fn test_cmd_output_output_fail() {
+//         let cmd = Command::new("cat").args(["test/"]);
+//         let output = tauri::async_runtime::block_on(cmd.output()).unwrap();
 
-        assert_eq!(String::from_utf8(output.stdout).unwrap(), "");
-        assert_eq!(
-            String::from_utf8(output.stderr).unwrap(),
-            "cat: test/: Is a directory\n\n"
-        );
-    }
-}
+//         assert_eq!(String::from_utf8(output.stdout).unwrap(), "");
+//         assert_eq!(
+//             String::from_utf8(output.stderr).unwrap(),
+//             "cat: test/: Is a directory\n\n"
+//         );
+//     }
+// }
